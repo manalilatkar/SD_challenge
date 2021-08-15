@@ -1,3 +1,6 @@
+require 'dotenv'
+require 'recaptcha'
+
 class UsersController < ApplicationController
   before_action :set_user, only: %i[ show edit update destroy ]
 
@@ -24,9 +27,8 @@ class UsersController < ApplicationController
   # POST /users or /users.json
   def create
     @user = User.new(user_params)
-
     respond_to do |format|
-      if @user.save
+      if verify_recaptcha(model: @user) && @user.save
         format.html { redirect_to @user, notice: "User was successfully created." }
         format.json { render :show, status: :created, location: @user }
       else
