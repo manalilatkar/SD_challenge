@@ -28,6 +28,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     respond_to do |format|
       if verify_recaptcha(model: @user) && @user.save
+        UserMailer.contact_later_email(user: @user).deliver_later
         @send_email = SendEmail.new({"user_id" => @user.id})
         @send_email.save
         format.html { redirect_to @user, notice: "User was successfully created." }

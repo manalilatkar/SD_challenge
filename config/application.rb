@@ -10,6 +10,9 @@ module SDChallenge
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.1
+    config.active_job.queue_adapter = :sidekiq
+    Sidekiq.configure_server { |c| c.redis = { url: ENV['REDIS_URL'] } }
+
 
     # Configuration for the application, engines, and railties goes here.
     #
